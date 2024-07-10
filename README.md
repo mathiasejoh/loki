@@ -12,6 +12,10 @@ helm search repo grafana
 
 helm show values grafana/loki-stack > loki-fluentbit-grafana.values.yaml
 helm upgrade --install loki-stack grafana/loki-stack -n=loki --values loki-fluentbit-grafana.values.yaml --create-namespace
+##########
+Use this for cdc deploy 
+helm upgrade --install loki-stack grafana/loki-stack -f cdc-values.yaml --namespace=cdc-loki  --create-namespace
+
 Promtail should be set to false else it will be deployed 
 Loki enabled with persistence set to true 
 Grafana is enabled
