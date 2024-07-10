@@ -1,0 +1,62 @@
+loki:
+  enabled: true
+  persistence:
+    enabled: true
+    accessModes:
+      - ReadWriteOnce
+    size: 2G
+  env:
+    - name: AWS_ACCESS_KEY_ID
+      valueFrom:
+        secretKeyRef:
+          name: iam-loki-s3
+          key: AWS_ACCESS_KEY_ID
+    - name: AWS_SECRET_ACCESS_KEY
+      valueFrom:
+        secretKeyRef:
+          name: iam-loki-s3
+          key: AWS_SECRET_ACCESS_KEY
+  config:
+    schema_config:
+      configs:
+        - from: 2021-05-12
+          store: boltdb-shipper
+          object_store: s3
+          schema: v11
+          index:
+            prefix: loki_index_
+            period: 24h
+    storage_config:
+      aws:
+        s3: s3://us-west-2/vprofile-cicdt
+        s3forcepathstyle: true
+        bucketnames: vprofile-cicdt
+        region: us-west-2
+        insecure: false
+        sse_encryption: false
+      boltdb_shipper:
+        shared_store: s3
+        cache_ttl: 24h
+
+promtail:
+  enabled: true
+  config:
+    logLevel: info
+    serverPort: 3101
+    clients:
+      - url: http://{{ .Release.Name }}:3100/loki/api/v1/push
+
+fluent-bit:
+  enabled: false
+
+grafana:
+  enabled: true
+  sidecar:
+    datasources:
+      label: ""
+      labelValue: ""
+      enabled: true
+      maxLines: 1000
+  image:
+    tag: 10.3.3
+

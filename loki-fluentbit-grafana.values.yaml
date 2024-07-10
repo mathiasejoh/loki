@@ -1,0 +1,25 @@
+loki:
+  enabled: true
+  persistence:
+     enabled: true
+     accessMode:
+       - ReadWriteOnce:
+     size: 1Gi
+
+fluent-bit:
+  enabled: true 
+
+promtail:
+  enabled: false
+
+grafana:
+  enabled: true
+  sidecar:
+    datasources:
+      label: ""
+      labelValue: ""
+      enabled: true
+      maxLines: 1000
+  image:
+    tag: 10.3.3
+
