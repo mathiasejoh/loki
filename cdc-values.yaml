@@ -36,10 +36,10 @@ write:
   no_proxy: ""
 
 fluent-bit:
-  enabled: true
+  enabled: false
 
 promtail:
-  enabled: false
+  enabled: true
 
 grafana:
   enabled: true
@@ -50,5 +50,5 @@ grafana:
       enabled: true
       maxLines: 1000
   image:
-    tag: 10.3.3
+    tag: latest
 

@@ -4,6 +4,10 @@ Deploy Loki to send fluentbit logs
 And visible in grafana 
 on local kind cluster
 Enable Grafana used to visualize the logs  and fluentbit used to get the logs
+https://github.com/grafana/loki/tree/main/production/helm
+Note that the chart for fluentbit is deprecated
+
+
 
 helm repo add grafana https://grafana.github.io/helm-charts	
 helm repo update
@@ -13,6 +17,8 @@ helm search repo grafana
 helm show values grafana/loki-stack > loki-fluentbit-grafana.values.yaml
 helm upgrade --install loki-stack grafana/loki-stack -n=loki --values loki-fluentbit-grafana.values.yaml --create-namespace
 ##########
+
+
 Use this for cdc deploy 
 helm upgrade --install loki-stack grafana/loki-stack -f cdc-values.yaml --namespace=cdc-loki  --create-namespace
 ########## you will fine complete values yaml here if you need to add any values. https://github.com/grafana/loki/blob/main/production/helm/loki/values.yaml
@@ -39,3 +45,7 @@ echo "username" | base64 -d
 
 From grafana 
 Explore and run query to view logs 
+
+
+Deploy a sample application with labels and check if you will see it in grafana loki
+kubectl apply -f sample-app.yaml

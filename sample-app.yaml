@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: api
+  template:
+    metadata: # Dictionary
+      name: myapi-pod
+      labels: # Dictionary 
+        app: api
+    spec:
+      containers: # List
+      - name: api
+        image: kodekloud/loki-demo
+        ports:
+        - containerPort: 80
+
+
+

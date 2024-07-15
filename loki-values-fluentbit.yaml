@@ -10,7 +10,7 @@ promtail:
   enabled: false
 
 fluent-bit:
-  enabled: true
+  enabled: false
 
 grafana:
   enabled: true
