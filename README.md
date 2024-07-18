@@ -53,6 +53,10 @@ kubectl apply -f sample-app.yaml
 To send logs to AWS use cdc-loki-s3-values.yaml
 create secret... do not push secret yaml to githup
 
+kubectl create secret generic iam-loki-s3 --from-literal='' --from-literal='' -n loki0
+
+kubectl create secret generic iam-loki-s3 --from-literal=AWS_ACCESS_KEY_ID='' --from-literal=AWS_SECRET_ACCESS_KEY='' -n loki0
+
 helm upgrade --install loki-stack grafana/loki-stack -f cdc-loki-s3-values.yaml --namespace=loki0
 Check S3 in aws to see logs 
 
