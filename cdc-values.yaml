@@ -3,6 +3,14 @@
 deploymentMode: SingleBinary
 
 loki:
+  image:
+    tag: latest
+  enabled: true
+  persistence:
+     enabled: true
+     accessMode:
+       - ReadWriteOnce:
+     size: 1Gi
   commonConfig:
     replication_factor: 1
   storage:
@@ -39,10 +47,10 @@ fluent-bit:
   enabled: false
 
 promtail:
-  enabled: true
+  enabled: false
 
 grafana:
-  enabled: true
+  enabled: false
   sidecar:
     datasources:
       label: ""

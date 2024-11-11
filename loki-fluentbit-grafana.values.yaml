@@ -1,4 +1,6 @@
 loki:
+  image:
+    tag: latest
   enabled: true
   persistence:
      enabled: true
@@ -7,13 +9,18 @@ loki:
      size: 1Gi
 
 fluent-bit:
-  enabled: true 
+  enabled: true
 
 promtail:
   enabled: false
 
 grafana:
-  enabled: true
+  enabled: false
+  persistence:
+     enabled: true
+     accessMode:
+       - ReadWriteOnce:
+     size: 1Gi
   sidecar:
     datasources:
       label: ""
@@ -21,5 +28,12 @@ grafana:
       enabled: true
       maxLines: 1000
   image:
-    tag: 10.3.3
+    tag: latest
+
+prometheus:
+  enabled: false
+  isDefault: false
+  url: http://{{ include "prometheus.fullname" .}}:{{ .Values.prometheus.server.service.servicePort }}{{ .Values.prometheus.server.prefixURL }}
+  datasource:
+    jsonData: "{}"
 

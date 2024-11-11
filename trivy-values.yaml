@@ -1,0 +1,12 @@
+global:
+  image:
+    registry: ""
+
+serviceMonitor:
+  # -- enabled determines whether a serviceMonitor should be deployed
+  enabled: true
+
+trivy:
+  ignoreUnfixed: true
+  # -- a comma separated list of file paths for Trivy to skip
+  
