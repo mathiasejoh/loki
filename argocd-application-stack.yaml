@@ -11,7 +11,7 @@ spec:
     chart: kube-prometheus-stack
     helm:
       valueFiles:
-      - $values/tkube-prometheus-stack-valuesy.yaml
+      - $values/kube-prometheus-stack-values.yaml
       - $values/edso-prometheus-rules.yaml
   - repoURL: 'git@github.com:mathiasejoh/loki.git'
     # Values from git
@@ -19,7 +19,7 @@ spec:
     targetRevision: HEAD
   destination:
     server: https://kubernetes.default.svc
-    namespace: tcdc-kube-prometheus-stack
+    namespace: cdc-kube-prometheus-stack
   syncPolicy:
     syncOptions:
     - CreateNamespace=true
