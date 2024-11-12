@@ -1,0 +1,29 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kube-prometheus-stack
+  namespace: argocd
+spec:
+  project: default
+  sources:
+  - repoURL: https://prometheus-community.github.io/helm-charts
+    targetRevision: 66.1.0
+    chart: kube-prometheus-stack
+    helm:
+      valueFiles:
+      - $values/tkube-prometheus-stack-valuesy.yaml
+      - $values/edso-prometheus-rules.yaml
+  - repoURL: 'git@github.com:mathiasejoh/loki.git'
+    # Values from git
+    ref: values
+    targetRevision: HEAD
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: tcdc-kube-prometheus-stack
+  syncPolicy:
+    syncOptions:
+    - CreateNamespace=true
+
+    automated:
+      selfHeal: true
+      prune: true

@@ -1,0 +1,85 @@
+additionalPrometheusRulesMap:
+  prometheus.rules:
+    groups:
+      - name: cdc-edso-rules-1
+        rules:          
+          - record: container:cpu_usage_seconds:rate1m
+            expr: |
+              avg_over_time(
+              avg by (container, pod, namespace) (
+              rate(container_cpu_usage_seconds_total{container!="", pod!="", namespace!="", image!=""}[1m])
+              )[15m:1m]
+              )
+          - record: container:memory_usage_bytes:avg1m
+            expr: |
+              avg_over_time(
+              avg by (container, pod, namespace) (
+              container_memory_usage_bytes{container!="", pod!="", namespace!="", image!=""}
+              )[15m:1m]
+              )
+          - record: node:memory_usage_bytes:avg1m
+            expr: avg_over_time(node:memory_usage_bytes{container!=""}[15m:1m])
+          - record: node:cpu_usage_seconds:rate1m
+            expr: sum(rate(node:cpu_usage_seconds_total[15m:1m]))
+
+      - name: cdc-edso-cluster-health-alerts
+        rules:
+          - alert: NodeDiskUsageHigh
+            expr: node_filesystem_usage{job="node-exporter"} > 0.8
+            for: 5m
+            labels:
+              severity: warning
+            annotations:
+              summary: "High disk usage on node {{ $labels.instance }}"
+              description: "Disk usage is above 80% on node {{ $labels.instance }}."
+          - alert: NodeMemoryUsageHigh
+            expr: node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes < 0.2
+            for: 5m
+            labels:
+              severity: warning
+            annotations:
+              summary: "High memory usage on node {{ $labels.instance }}"
+              description: "Memory usage is above 80% on node {{ $labels.instance }}."
+          - alert: NodeCPUUsageHigh
+            expr: sum(rate(node_cpu_seconds_total{mode!="idle"}[5m])) by (instance) / sum(rate(node_cpu_seconds_total[5m])) by (instance) > 0.8
+            for: 5m
+            labels:
+              severity: warning
+            annotations:
+              summary: "High CPU usage on node {{ $labels.instance }}"
+              description: "CPU usage is above 80% on node {{ $labels.instance }}."
+          - alert: PodRestartingTooFrequently
+            expr: rate(kube_pod_container_status_restarts_total[10m]) > 0.3 #kube_pod_container_status_restarts_total > 3
+            for: 10m
+            labels:
+              severity: warning
+            annotations:
+              summary: "Pod {{ $labels.pod }} is restarting too frequently"
+              description: "Pod {{ $labels.pod }} in namespace {{ $labels.namespace }} has restarted more than 3 times in the last 10 minutes."
+          - alert: PodNotReady
+            expr: kube_pod_status_ready{condition="false"} > 0
+            for: 5m
+            labels:
+              severity: critical
+            annotations:
+              summary: "Pod {{ $labels.pod }} is not ready"
+              description: "Pod {{ $labels.pod }} in namespace {{ $labels.namespace }} is not in a Ready state."
+          - alert: PodCrashLoopBackOff
+            expr: kube_pod_container_status_waiting_reason{reason="CrashLoopBackOff"} > 0
+            for: 5m
+            labels:
+              severity: critical
+            annotations:
+              summary: "Pod {{ $labels.pod }} is in CrashLoopBackOff"
+              description: "Pod {{ $labels.pod }} in namespace {{ $labels.namespace }} is in a CrashLoopBackOff state."
+
+      - name: application-metrics-alerts
+        rules:
+          - alert: HighRequestLatency
+            expr: histogram_quantile(0.95, rate(http_request_duration_seconds_bucket[5m])) > 0.5
+            for: 5m
+            labels:
+              severity: warning
+            annotations:
+              summary: "High request latency"
+              description: "95th percentile request latency is above 500ms."
