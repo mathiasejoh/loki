@@ -1,0 +1,20 @@
+project: default
+source:
+  repoURL: https://aquasecurity.github.io/helm-charts
+  targetRevision: 0.24.1
+  helm:
+    parameters:
+    - name: trivy.ignoreUnfixed
+      value: 'true'
+    - name: serviceMonitor.enabled
+      value: 'true'
+  chart: trivy-operator
+destination:
+  server: https://kubernetes.default.svc
+  namespace: trivy-system
+syncPolicy:
+  automated:
+    prune: true
+    selfHeal: true
+  syncOptions:
+  - CreateNamespace=true

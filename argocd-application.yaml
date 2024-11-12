@@ -12,14 +12,13 @@ spec:
     helm:
       valueFiles:
       - $values/trivy-values.yaml
-  - repoURL: 'https://github.com/mathiasejoh/loki.git'
+  - repoURL: 'git@github.com:mathiasejoh/loki.git'
     # Values from git
     ref: values
-    targetRevision: master
+    targetRevision: HEAD
   destination:
     server: https://kubernetes.default.svc
     namespace: trivy-system
-
   syncPolicy:
     syncOptions:
     - CreateNamespace=true
