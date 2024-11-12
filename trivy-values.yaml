@@ -7,4 +7,4 @@ serviceMonitor:
   enabled: true
 
 trivy:
-  ignoreUnfixed: false # -- a comma separated list of file paths for Trivy to skip ....  
+  ignoreUnfixed: true
