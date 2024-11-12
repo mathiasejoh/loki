@@ -11,13 +11,11 @@ spec:
     chart: trivy-operator
     helm:
       valueFiles:
-      - trivy-values.yaml
-      - $values/install/values-files/aws/dev/fluent-bit-aws-values.yaml
-      ignoreMissingValueFiles: true
-  - repoURL: 'https://github.com/cdcent/cdc-edso-platform'
+      - $values/trivy-values.yaml
+  - repoURL: 'https://github.com/mathiasejoh/loki.git'
     # Values from git
     ref: values
-    targetRevision: HEAD
+    targetRevision: master
   destination:
     server: https://kubernetes.default.svc
     namespace: trivy-system
