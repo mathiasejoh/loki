@@ -78,5 +78,6 @@ prometheus:
     ## If true, a nil or {} value for prometheus.prometheusSpec.podMonitorSelector will cause the
     ## prometheus resource to be created with selectors based on values in the helm deployment,
     ## which will also match the podmonitors created
-    ##
+    remoteWrite: 
+      - url: "http://mimir-nginx.mimir-test.svc:80/api/v1/push"
 namespaceOverride: cdc-kube-prometheus-stack
